@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            max-width: 640px;
+            border: 1px solid black;
+        }
+
+        #emotion {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="video" autoplay playsinline></video>
+    <div id="emotion">Detecting emotion...</div>
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <script>
+        const video = document.getElementById('video');
+        const emotionDisplay = document.getElementById('emotion');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        // Asks for the camera and handles errors
+        async function setupCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing webcam: ", err);
+                alert("Error accessing webcam: " + err.message);
+            }
+        }
+
+        // Function to capture frame and send it to the server for emotion detection
+        async function captureFrame() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/jpeg');
+            const base64Image = imageData.split(',')[1];
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: base64Image })
+                });
+                const data = await response.json();
+                emotionDisplay.textContent = `Detected emotion: ${data[0].emotion} with probability ${(data[0].probability * 100).toFixed(2)}%`;
+            } catch (error) {
+                console.error('Error:', error);
+                emotionDisplay.textContent = 'Error detecting emotion.';
+            }
+        }
+
+        // Initialize the camera when the page loads
+        window.addEventListener('load', () => {
+            setupCamera();
+            setInterval(captureFrame, 1000); // Capture frame every 1 second
+        });
+    </script>
+</body>
+
+</html>

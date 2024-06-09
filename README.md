@@ -23,6 +23,10 @@
         <li>En el servidor, las imágenes recibidas se procesan para detectar rostros utilizando un modelo de detección de rostros pre-entrenado. Luego, se extraen los rostros detectados y se clasifican las emociones asociadas utilizando un modelo de clasificación de emociones.</li>
         <li>La emoción detectada se muestra en la interfaz de usuario en tiempo real.</li>
     </ul>
+    <h2>Ejemplo:<h2>
+   <p>Este es un ejemplo de detección de emociones en tiempo real utilizando el sistema implementado en este proyecto.</p>
+   <img src="https://github.com/MagoPato/Emotion-Detection-WebApp/blob/main/assets/ToGift.gif?raw=true" alt="Emotion Detection Demo">
+   
 
    <h2>Requisitos</h2>
 
@@ -68,4 +72,9 @@
 <p>¡Las contribuciones son bienvenidas! Si tienes alguna idea para mejorar este proyecto, siéntete libre de abrir un problema o enviar un pull request.</p>
 <h2>Licencia</h2>
 <p>Este proyecto está bajo la licencia MIT. Consulta el archivo <code>LICENSE</code> para más detalles.</p>
+
+
+
+
+
 
